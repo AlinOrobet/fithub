@@ -2,6 +2,7 @@
 
 import {z} from "zod";
 import {Suspense, useState} from "react";
+import {usePathname, useRouter} from "next/navigation";
 import {useForm} from "react-hook-form";
 import {ErrorBoundary} from "react-error-boundary";
 import {Eye, EyeOff, Loader2} from "lucide-react";
@@ -55,6 +56,8 @@ const SignInSkeleton = () => {
 };
 
 const SignInContent = () => {
+  const pathname = usePathname();
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
@@ -75,6 +78,9 @@ const SignInContent = () => {
       utils.auth.getCurrentUser.invalidate();
       form.reset();
       onClose();
+      if (pathname === "/not-authenticated") {
+        router.push("/");
+      }
     },
     onError: (error) => {
       setError(error.message);
