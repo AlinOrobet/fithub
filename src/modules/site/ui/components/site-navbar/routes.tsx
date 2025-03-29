@@ -3,23 +3,8 @@ import Link from "next/link";
 import {usePathname} from "next/navigation";
 // import {useLocalStorage} from "react-use";
 
-import {useIsMobile} from "@/hooks/use-mobile";
 import {cn} from "@/lib/utils";
 import {navigationRoutes} from "@/modules/site/data";
-
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 
 export const Routes = () => {
   const pathname = usePathname();
@@ -147,37 +132,37 @@ export const Routes = () => {
   // );
 };
 
-interface ContentProps {
-  startUrl: string;
-  productNames: string[];
-  className?: string;
-}
+// interface ContentProps {
+//   startUrl: string;
+//   productNames: string[];
+//   className?: string;
+// }
 
-const Content = ({startUrl, productNames, className}: ContentProps) => {
-  const formattedData = productNames
-    ?.map((item) => {
-      const [name, value] = item.split("@@");
-      return {name, value};
-    })
-    .sort((a, b) => a.name.length - b.name.length);
+// const Content = ({startUrl, productNames, className}: ContentProps) => {
+//   const formattedData = productNames
+//     ?.map((item) => {
+//       const [name, value] = item.split("@@");
+//       return {name, value};
+//     })
+//     .sort((a, b) => a.name.length - b.name.length);
 
-  return (
-    <ul
-      className={
-        className
-          ? className
-          : cn("grid", formattedData.length <= 1 ? "grid-cols-1" : "grid-cols-2")
-      }
-    >
-      {formattedData.map((data, index) => (
-        <Link
-          href={`${startUrl}/${data.value}`}
-          key={index}
-          className="uppercase text-left flex items-center text-white/80 hover:text-white hover:bg-muted/50 p-3 rounded-md w-full"
-        >
-          {data.name}
-        </Link>
-      ))}
-    </ul>
-  );
-};
+//   return (
+//     <ul
+//       className={
+//         className
+//           ? className
+//           : cn("grid", formattedData.length <= 1 ? "grid-cols-1" : "grid-cols-2")
+//       }
+//     >
+//       {formattedData.map((data, index) => (
+//         <Link
+//           href={`${startUrl}/${data.value}`}
+//           key={index}
+//           className="uppercase text-left flex items-center text-white/80 hover:text-white hover:bg-muted/50 p-3 rounded-md w-full"
+//         >
+//           {data.name}
+//         </Link>
+//       ))}
+//     </ul>
+//   );
+// };
