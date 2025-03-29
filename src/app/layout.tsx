@@ -1,16 +1,20 @@
 import type {Metadata} from "next";
-import {Geist, Geist_Mono} from "next/font/google";
-import "./globals.css";
-import {TRPCProvider} from "@/trpc/client";
+import {Roboto} from "next/font/google";
+import localFont from "next/font/local";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+import {TRPCProvider} from "@/trpc/client";
+import {Providers} from "@/components/providers";
+import "./globals.css";
+
+const roboto = Roboto({
+  variable: "--font-roboto",
   subsets: ["latin"],
+  weight: ["400"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+export const nevanRus = localFont({
+  src: "../app/fonts/nevanRus.woff2",
+  variable: "--font-nevan",
 });
 
 export const metadata: Metadata = {
@@ -25,8 +29,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <TRPCProvider>{children}</TRPCProvider>
+      <body className={`${nevanRus.variable} ${roboto.variable} antialiased`}>
+        <TRPCProvider>
+          <Providers />
+          {children}
+        </TRPCProvider>
       </body>
     </html>
   );
