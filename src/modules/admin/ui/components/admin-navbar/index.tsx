@@ -1,5 +1,6 @@
 import {SidebarTrigger} from "@/components/ui/sidebar";
 import {Logo} from "@/components/logo";
+// import {AuthButton} from "@/modules/auth/ui/components/auth-button";
 
 export const AdminNavbar = () => {
   return (
