@@ -19,9 +19,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {trpc} from "@/trpc/client";
+
 import {Suspense} from "react";
 import {ErrorBoundary} from "react-error-boundary";
+import {trpc} from "@/trpc/client";
 
 export const AuthButton = () => {
   return (
@@ -81,15 +82,24 @@ const AuthButtonSkeleton = () => {
 };
 
 const AuthButtonContent = () => {
-  const {data: currentUser} = trpc.auth.getCurrentUser.useQuery(undefined, {
-    suspense: true,
-    retry: false,
+  const [currentUser] = trpc.auth.getCurrentUser.useSuspenseQuery();
+  const signOut = trpc.auth.signOut.useMutation({
+    onSuccess: () => {
+      utils.auth.getCurrentUser.invalidate();
+    },
   });
+
+  const utils = trpc.useUtils();
+
+  console.log(currentUser);
+  if (!currentUser) {
+    return <AuthButtonError />;
+  }
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className={cn(currentUser && "rounded-full")} asChild={!currentUser}>
-        <UserAvatar imageUrl="" name={currentUser?.name} />
+      <DropdownMenuTrigger className="rounded-full">
+        <UserAvatar imageUrl={currentUser.image} name={currentUser.name} />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="mt-1.5 min-w-60">
         {navigationGroups.map((group, index) => (
@@ -106,7 +116,7 @@ const AuthButtonContent = () => {
             <DropdownMenuSeparator />
           </DropdownMenuGroup>
         ))}
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={async () => await signOut.mutateAsync()}>
           <LogOut />
           Deconectează-te
         </DropdownMenuItem>

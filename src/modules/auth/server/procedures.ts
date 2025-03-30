@@ -3,21 +3,30 @@ import {z} from "zod";
 import {ID} from "node-appwrite";
 
 import {APPWRITE_CLIENTS_ID, APPWRITE_DATABASE_ID, AUTH_COOKIE} from "@/config";
-import {baseProcedure, createTRPCRouter, protectedUserProcedure} from "@/trpc/init";
+import {baseProcedure, createTRPCRouter} from "@/trpc/init";
 import {TRPCError} from "@trpc/server";
+import {createSessionClient} from "@/lib/appwrite";
 
 export const authRouter = createTRPCRouter({
-  getCurrentUser: protectedUserProcedure.query(async ({ctx}) => {
-    const {databases} = ctx;
-    const accountDetails = await databases.getDocument(
-      APPWRITE_DATABASE_ID,
-      APPWRITE_CLIENTS_ID,
-      ctx.user.$id
-    );
+  getCurrentUser: baseProcedure.query(async () => {
+    try {
+      const {account, databases} = await createSessionClient();
 
-    const {$id, name, email} = accountDetails;
+      const currentUser = await account.get();
 
-    return {id: $id, name, email};
+      const accountDetails = await databases.getDocument(
+        APPWRITE_DATABASE_ID,
+        APPWRITE_CLIENTS_ID,
+        currentUser.$id
+      );
+
+      const {$id, name, email} = accountDetails;
+      // TODO:Replace with image
+      return {id: $id, name, email, image: ""};
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
   }),
   signIn: baseProcedure
     .input(
@@ -51,6 +60,19 @@ export const authRouter = createTRPCRouter({
         throw new TRPCError({code: "NOT_FOUND", message: "Unknown error"});
       }
     }),
+  signOut: baseProcedure.mutation(async ({ctx}) => {
+    try {
+      const {account} = ctx;
+
+      const cookiesStore = await cookies();
+      cookiesStore.delete(AUTH_COOKIE);
+
+      await account.deleteSession("current");
+    } catch (error) {
+      console.error(error);
+      return {success: true};
+    }
+  }),
   signUp: baseProcedure
     .input(
       z.object({
