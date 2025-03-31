@@ -20,10 +20,8 @@ export const SiteHeroBanner = () => {
               Highly customizable components for building modern websites and applications that look
               and feel the way you mean it.
             </p>
-            <Button variant="site" size="auto" className="p-4 sm:px-6" asChild>
-              <Link href="">
-                <span className="skew-x-12">Descoperă mai mult</span>
-              </Link>
+            <Button variant="offset" size="auto" className="p-4 sm:px-6" asChild>
+              <Link href="">Descoperă mai mult</Link>
             </Button>
           </div>
         </div>

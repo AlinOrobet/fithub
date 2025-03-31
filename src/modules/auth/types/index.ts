@@ -16,3 +16,8 @@ export type AUTH_ERRORS_CONTENT = {
   action: string;
   navigateTo: AUTH_TYPE;
 };
+
+export type User = {
+  name: string;
+  email: string;
+};

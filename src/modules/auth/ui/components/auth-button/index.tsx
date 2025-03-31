@@ -91,7 +91,6 @@ const AuthButtonContent = () => {
 
   const utils = trpc.useUtils();
 
-  console.log(currentUser);
   if (!currentUser) {
     return <AuthButtonError />;
   }
