@@ -22,7 +22,7 @@ export const authRouter = createTRPCRouter({
 
       const {$id, name, email} = accountDetails;
       // TODO:Replace with image
-      return {id: $id, name, email, image: ""};
+      return {id: $id, name, email, image: "", role: currentUser.labels};
     } catch (error) {
       console.log(error);
       return null;

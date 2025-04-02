@@ -1,6 +1,6 @@
 import {NextResponse} from "next/server";
 import type {NextRequest} from "next/server";
-import {createSessionClient} from "./lib/appwrite";
+import {createSessionClient} from "@/lib/appwrite";
 
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl;

@@ -1,6 +1,6 @@
 import {SidebarTrigger} from "@/components/ui/sidebar";
 import {Logo} from "@/components/logo";
-// import {AuthButton} from "@/modules/auth/ui/components/auth-button";
+import {AuthButton} from "@/modules/auth/ui/components/auth-button";
 
 export const AdminNavbar = () => {
   return (
@@ -13,7 +13,7 @@ export const AdminNavbar = () => {
               <Logo href="/admin" className="h-16 w-32" />
             </div>
             <div className="flex-shrink-0 items-center flex justify-end gap-4">
-              {/* <AuthButton /> */}
+              <AuthButton />
             </div>
           </div>
         </div>

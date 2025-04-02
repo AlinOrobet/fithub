@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import {ChevronsRight, Loader2, LogOut, UserRound} from "lucide-react";
+import {ChevronsRight, Cog, Globe, Loader2, LogOut, UserRound} from "lucide-react";
 
 import {cn} from "@/lib/utils";
 import {useAuthModal} from "@/modules/auth/hooks/use-auth-modal";
@@ -23,6 +23,7 @@ import {
 import {Suspense} from "react";
 import {ErrorBoundary} from "react-error-boundary";
 import {trpc} from "@/trpc/client";
+import {usePathname} from "next/navigation";
 
 export const AuthButton = () => {
   return (
@@ -82,6 +83,7 @@ const AuthButtonSkeleton = () => {
 };
 
 const AuthButtonContent = () => {
+  const pathname = usePathname();
   const [currentUser] = trpc.auth.getCurrentUser.useSuspenseQuery();
   const signOut = trpc.auth.signOut.useMutation({
     onSuccess: () => {
@@ -115,6 +117,21 @@ const AuthButtonContent = () => {
             <DropdownMenuSeparator />
           </DropdownMenuGroup>
         ))}
+        {currentUser.role.includes("admin") && (
+          <DropdownMenuItem asChild>
+            {pathname.startsWith("/admin") ? (
+              <Link href="/">
+                <Globe />
+                Pagina principală
+              </Link>
+            ) : (
+              <Link href="/admin">
+                <Cog />
+                Administrare
+              </Link>
+            )}
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onClick={async () => await signOut.mutateAsync()}>
           <LogOut />
           Deconectează-te

@@ -1,4 +1,3 @@
-import {User} from "@/modules/auth/types";
 import {Video} from "@/modules/admin/videos/types";
 
 export type CARDS_TYPE = "trainer" | "course";

@@ -1,7 +1,9 @@
 "use client";
-
+import {usePathname} from "next/navigation";
 import Link from "next/link";
 
+import {sidebarGroups} from "@/modules/admin/data";
+import {cn} from "@/lib/utils";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -10,26 +12,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import {
-  Bell,
-  BicepsFlexed,
-  BookOpen,
-  ChartColumn,
-  Dumbbell,
-  FileText,
-  Images,
-  MessageCircle,
-  MessageCircleQuestion,
-  PackageOpen,
-  Salad,
-  Shapes,
-  Shirt,
-  Users,
-  Vegan,
-  VideoIcon,
-} from "lucide-react";
-import {usePathname} from "next/navigation";
-import {cn} from "@/lib/utils";
 
 export const SidebarItems = () => {
   const pathname = usePathname();
@@ -48,7 +30,7 @@ export const SidebarItems = () => {
 
   return (
     <>
-      {groups.map((group) => (
+      {sidebarGroups.map((group) => (
         <SidebarGroup key={group.label} className="border-b last:border-0">
           <SidebarGroupContent>
             <SidebarGroupLabel className="text-base font-semibold">{group.label}</SidebarGroupLabel>
@@ -79,52 +61,3 @@ export const SidebarItems = () => {
     </>
   );
 };
-
-const groups = [
-  {
-    label: "Analiză",
-    items: [
-      {label: "Statistici", href: "/admin", icon: ChartColumn},
-      {label: "Clienți", href: "/admin/clients", icon: Users},
-      {label: "Testimoniale", href: "/admin/testimonials", icon: MessageCircle},
-    ],
-  },
-  {
-    label: "Conținut",
-    items: [
-      {label: "Pagini", href: "/admin/pages", icon: BookOpen},
-      {label: "Documente", href: "/admin/documents", icon: FileText},
-      {label: "Anunțuri", href: "/admin/announcements", icon: Bell},
-      {label: "Pachete", href: "/admin/bundles", icon: PackageOpen},
-      {label: "Chestionare", href: "/admin/questionnaires", icon: MessageCircleQuestion},
-    ],
-  },
-  {
-    label: "Antrenamente",
-    items: [
-      {label: "Programe", href: "/admin/programs", icon: BicepsFlexed},
-      {label: "Exerciții", href: "/admin/exercises", icon: Dumbbell},
-    ],
-  },
-  {
-    label: "Diete",
-    items: [
-      {label: "Planuri alimentare", href: "/admin/diets", icon: Vegan},
-      {label: "Meniu", href: "/admin/menus", icon: Salad},
-    ],
-  },
-  {
-    label: "Magazin",
-    items: [
-      {label: "Produse", href: "/admin/products", icon: Shirt},
-      {label: "Filtre", href: "/admin/filters", icon: Shapes},
-    ],
-  },
-  {
-    label: "Media",
-    items: [
-      {label: "Imagini", href: "/admin/images", icon: Images},
-      {label: "Videoclipuri", href: "/admin/videos", icon: VideoIcon},
-    ],
-  },
-];
