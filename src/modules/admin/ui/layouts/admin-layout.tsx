@@ -12,7 +12,7 @@ export const AdminLayout = ({children}: AdminLayoutProps) => {
   return (
     <HydrateClient>
       <div className="h-full relative">
-        <SidebarProvider className="absolute top-0 left-0 h-full">
+        <SidebarProvider className="absolute top-0 left-0 h-full overflow-x-hidden">
           <div className="w-full">
             <AdminNavbar />
             <div className="flex min-h-screen max-w-screen-2xl mx-auto">

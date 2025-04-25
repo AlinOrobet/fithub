@@ -1,5 +1,9 @@
 "use client";
 import Link from "next/link";
+import {Suspense} from "react";
+import {ErrorBoundary} from "react-error-boundary";
+import {usePathname, useRouter} from "next/navigation";
+import {trpc} from "@/trpc/client";
 import {ChevronsRight, Cog, Globe, Loader2, LogOut, UserRound} from "lucide-react";
 
 import {cn} from "@/lib/utils";
@@ -19,11 +23,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-import {Suspense} from "react";
-import {ErrorBoundary} from "react-error-boundary";
-import {trpc} from "@/trpc/client";
-import {usePathname} from "next/navigation";
 
 export const AuthButton = () => {
   return (
@@ -84,10 +83,12 @@ const AuthButtonSkeleton = () => {
 
 const AuthButtonContent = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const [currentUser] = trpc.auth.getCurrentUser.useSuspenseQuery();
   const signOut = trpc.auth.signOut.useMutation({
     onSuccess: () => {
       utils.auth.getCurrentUser.invalidate();
+      router.push("/");
     },
   });
 

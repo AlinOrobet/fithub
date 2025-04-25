@@ -17,7 +17,7 @@ interface Action {
 
 interface ColumnsActionsProps {
   actions: Action[];
-  isDisabled: boolean;
+  isDisabled?: boolean;
 }
 
 export const ColumnsActions = ({actions, isDisabled}: ColumnsActionsProps) => {

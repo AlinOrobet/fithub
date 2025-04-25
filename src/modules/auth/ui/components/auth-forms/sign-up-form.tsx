@@ -1,6 +1,7 @@
 "use client";
 
 import {z} from "zod";
+import {usePathname, useRouter} from "next/navigation";
 import {Suspense, useState} from "react";
 import {useForm} from "react-hook-form";
 import {ErrorBoundary} from "react-error-boundary";
@@ -53,14 +54,22 @@ const SignUpSkeleton = () => {
 };
 
 const SignUpContent = () => {
+  const pathname = usePathname();
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const {isOpen, onOpen, onClose} = useAuthModal();
+  const {isOpen, onClose} = useAuthModal();
+
+  const utils = trpc.useUtils();
 
   const action = trpc.auth.signUp.useMutation({
     onSuccess: () => {
+      utils.auth.getCurrentUser.invalidate();
       form.reset();
-      onOpen("sign-in");
+      onClose();
+      if (pathname === "/not-authenticated") {
+        router.push("/");
+      }
     },
     onError: (error) => {
       setError(error.message);

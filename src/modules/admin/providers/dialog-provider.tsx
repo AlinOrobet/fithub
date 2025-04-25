@@ -1,18 +1,17 @@
 import {Suspense} from "react";
 import {SyncLoader} from "react-spinners";
 
-import {useDialog} from "@/modules/admin/hooks/useDialog";
+import {useDialog} from "@/modules/admin/hooks/use-dialog";
 
 import {cn} from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {CreateMediaForm} from "@/modules/admin/(media)/images/ui/create-media-form";
+import {CreateImageForm} from "@/modules/admin/(media)/images/ui/create-image-form";
 
 export const DialogProvider = () => {
   const {dialogId, removeDialog} = useDialog();
@@ -26,15 +25,15 @@ export const DialogProvider = () => {
   };
 
   const DIALOG_COMPONENTS = {
-    "create-media": {
-      header: <DialogTitle className="text-left">Adaugă media</DialogTitle>,
-      body: <CreateMediaForm onClose={handleOnClose} />,
+    "create-image": {
+      header: <DialogTitle className="text-left">Adaugă imagine</DialogTitle>,
+      body: <CreateImageForm onClose={handleOnClose} />,
       footer: undefined,
       headerClassName: undefined,
     },
   };
 
-  const dialog = DIALOG_COMPONENTS[dialogId];
+  const dialog = DIALOG_COMPONENTS[dialogId as keyof typeof DIALOG_COMPONENTS];
 
   return (
     <Suspense

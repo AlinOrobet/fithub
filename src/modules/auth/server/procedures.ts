@@ -38,7 +38,7 @@ export const authRouter = createTRPCRouter({
     .mutation(async ({ctx, input}) => {
       try {
         const {email, password} = input;
-        const {account} = ctx;
+        const {account, databases} = ctx;
 
         const session = await account.createEmailPasswordSession(email, password);
 
@@ -50,6 +50,10 @@ export const authRouter = createTRPCRouter({
           secure: true,
           sameSite: "strict",
           maxAge: 60 * 60 * 24 * 30,
+        });
+
+        await databases.updateDocument(APPWRITE_DATABASE_ID, APPWRITE_CLIENTS_ID, session.userId, {
+          accessedAt: new Date(),
         });
 
         return {success: true, message: "Success"};
@@ -91,6 +95,23 @@ export const authRouter = createTRPCRouter({
         await databases.createDocument(APPWRITE_DATABASE_ID, APPWRITE_CLIENTS_ID, user.$id, {
           name,
           email,
+        });
+
+        const session = await account.createEmailPasswordSession(email, password);
+
+        const cookiesStore = await cookies();
+
+        cookiesStore.set(AUTH_COOKIE, session.secret, {
+          path: "/",
+          httpOnly: true,
+          secure: true,
+          sameSite: "strict",
+          maxAge: 60 * 60 * 24 * 30,
+        });
+
+        await databases.updateDocument(APPWRITE_DATABASE_ID, APPWRITE_CLIENTS_ID, session.userId, {
+          accessedAt: new Date(),
+          countryCode: session.countryCode,
         });
 
         return user;

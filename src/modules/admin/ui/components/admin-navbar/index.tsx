@@ -5,7 +5,7 @@ import {AuthButton} from "@/modules/auth/ui/components/auth-button";
 export const AdminNavbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 h-16 flex items-center z-50 bg-background">
-      <div className="w-full max-w-screen-2xl mx-auto px-2 border-b">
+      <div className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 border-b lg:pl-2">
         <div className="flex items-center gap-4 w-full">
           <div className="grid grid-cols-3 items-center w-full">
             <SidebarTrigger />

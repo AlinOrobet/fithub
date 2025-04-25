@@ -5,6 +5,7 @@ import {initTRPC, TRPCError} from "@trpc/server";
 import {AUTH_COOKIE} from "@/config";
 import {cookies} from "next/headers";
 import {createClient, createSessionClient} from "@/lib/appwrite";
+import {ratelimit} from "@/lib/ratelimit";
 
 export const createTRPCContext = cache(async () => {
   const {account, databases, user, storage} = await createClient();
@@ -34,6 +35,12 @@ export const protectedUserProcedure = t.procedure.use(async function isAuthed(op
     const {account} = await createSessionClient();
     const user = await account.get();
 
+    const {success} = await ratelimit.limit(user.$id);
+
+    if (!success) {
+      throw new TRPCError({code: "TOO_MANY_REQUESTS"});
+    }
+
     return opts.next({ctx: {...opts.ctx, user}});
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -44,16 +51,26 @@ export const protectedUserProcedure = t.procedure.use(async function isAuthed(op
 });
 
 export const protectedAdminProcedure = t.procedure.use(async function isAuthed(opts) {
-  const {ctx} = opts;
-
   const cookieValues = await cookies();
   const session = cookieValues.get(AUTH_COOKIE);
 
-  const user = await ctx.account.get();
-
-  if (!session || !ctx.user || !user.labels.includes("admin")) {
+  if (!session) {
     throw new TRPCError({code: "UNAUTHORIZED"});
   }
 
-  return opts.next({ctx: {...ctx}});
+  try {
+    const {account} = await createSessionClient();
+    const user = await account.get();
+
+    if (!user.labels.includes("admin")) {
+      throw new TRPCError({code: "UNAUTHORIZED"});
+    }
+
+    return opts.next({ctx: {...opts.ctx, user}});
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new TRPCError({code: "UNAUTHORIZED", message: error.message});
+    }
+    throw new TRPCError({code: "UNAUTHORIZED", message: "Unknown error"});
+  }
 });
